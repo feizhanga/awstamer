@@ -1,0 +1,13 @@
+#!/usr/bin/bash
+
+echo "Use the AWS CLI to Create an IAM Instance Profile for Your Amazon EC2 Instances"
+
+aws iam create-role --role-name CodeDeployFZen-EC2 --assume-role-policy-document file://CodeDeployFZen-EC2-Trust.json
+
+aws iam put-role-policy --role-name CodeDeployFZen-EC2 --policy-name CodeDeployFZen-EC2-Permissions --policy-document file://CodeDeployFZen-EC2-Permissions.json
+
+aws iam create-instance-profile --instance-profile-name CodeDeployFZen-EC2-Instance-Profile
+aws iam add-role-to-instance-profile --instance-profile-name CodeDeployFZen-EC2-Instance-Profile --role-name CodeDeployFZen-EC2
+
+echo "Use the AWS CLI to Get the IAM Instance Profile Name"
+aws iam list-instance-profiles-for-role --role-name CodeDeployFZen-EC2 --query "InstanceProfiles[0].InstanceProfileName" --output text

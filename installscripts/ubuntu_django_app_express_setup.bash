@@ -39,14 +39,14 @@ ls -l $PROJECTS_DIR
 # don't run this as root
 
 if [ "${WHOAMI}" == "root" ]; then
-	echo "Don't run this script with sudo or as root."
+	echo "Don't run this script as root."
 	exit
 fi
 
 # output script echos to stderr
 echoerr() { echo "$@" 1>&2; }
 
-# clean up and trapping functions
+# clean up not used
 cleanup() {
   rm -f $PROJECTS_DIR/$DJANGO_PROJECT_NAME
   sudo rm /etc/nginx/sites-enabled/*
@@ -77,10 +77,6 @@ config_setup_postgres() {
     #alter database mydb owner to ubuntu;
     sudo su postgres -c "createdb \"$POSTGRES_DB_NAME\" -O  $WHOAMI"
 
-    #until su postgres -c "createdb \"$POSTGRES_DB_NAME\" -O ubuntu;" # no need to create new role
-    #do
-    #	echoerr "Wrong password. Password is \"postgres\" (no quotes). Try again"
-    #done
 }
 
 # trap keyboard interrupt (control-c)
@@ -221,6 +217,5 @@ cd $PROJECTS_DIR/$DJANGO_PROJECT_NAME/
 # to run the gunicorn (as nobody user) sudo gunicorn
 gunicorn -c $DJANGO_PROJECT_NAME/gunicorn_config.py $DJANGO_PROJECT_NAME.wsgi &
 
-echoerr "Django is now running in the background.    Navigate to http://$FqdnameOrIpAddress/admin to test"
+echoerr "Gunicorn should be now running in the background.  To test navigate to http://$FqdnameOrIpAddress/admin "
 
-# FIN

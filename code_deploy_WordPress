@@ -1,0 +1,106 @@
+ 1020  cd works/
+
+ 1022  tar -zxvf latest.tar.gz
+
+ 1027  mv wordpress /tmp/WordPress
+ 1028  mkdir -p /tmp/WordPress/scripts
+ 1031  cd  /tmp/WordPress/scripts/
+
+ 1033  vi stop_server.sh
+ 1034  vi start_server.sh
+ 1035  vi change_permissions.sh
+
+ 1037  chmod a+x *
+
+ 1043  vi appspec.yml
+
+ 1044  aws s3 mb s3://CodeDeployFZenBucket
+ 1045  aws s3 mb CodeDeployFZenBucket
+ 1046  aws s3 mb s3://ga-codedeploybucket
+
+ 1048  aws deploy create-application --application-name WordPress_App
+ 1050  aws deploy push   --application-name WordPress_App   --s3-location s3://ga-codedeploybucket/WordPressApp.zip   --ignore-hidden-files
+ 
+
+Go to GA web console to deploy as fei.zhang@ga
+
+Results "successful". but when access http://ec2-52-64-114-227.ap-southeast-2.compute.amazonaws.com/WordPress/
+403 Forbidden
+
+You don't have permission to access /WordPress/ on this server.
+
+Apache/2.2.29 (Amazon) Server at ec2-52-64-114-227.ap-southeast-2.compute.amazonaws.com Port 80
+
+check file system
+[ec2-user@ip-172-31-14-207 deployment-root]$ ls /var/www/html/WordPress/ -l
+ls: cannot access /var/www/html/WordPress/wp-mail.php: Permission denied
+ls: cannot access /var/www/html/WordPress/wp-settings.php: Permission denied
+ls: cannot access /var/www/html/WordPress/wp-links-opml.php: Permission denied
+ls: cannot access /var/www/html/WordPress/wp-login.php: Permission denied
+ls: cannot access /var/www/html/WordPress/wp-includes: Permission denied
+ls: cannot access /var/www/html/WordPress/wp-activate.php: Permission denied
+ls: cannot access /var/www/html/WordPress/wp-comments-post.php: Permission denied
+ls: cannot access /var/www/html/WordPress/wp-config-sample.php: Permission denied
+ls: cannot access /var/www/html/WordPress/index.php: Permission denied
+ls: cannot access /var/www/html/WordPress/appspec.yml: Permission denied
+ls: cannot access /var/www/html/WordPress/wp-load.php: Permission denied
+ls: cannot access /var/www/html/WordPress/wp-content: Permission denied
+ls: cannot access /var/www/html/WordPress/readme.html: Permission denied
+ls: cannot access /var/www/html/WordPress/wp-trackback.php: Permission denied
+ls: cannot access /var/www/html/WordPress/wp-admin: Permission denied
+ls: cannot access /var/www/html/WordPress/xmlrpc.php: Permission denied
+ls: cannot access /var/www/html/WordPress/wp-blog-header.php: Permission denied
+ls: cannot access /var/www/html/WordPress/wp-signup.php: Permission denied
+ls: cannot access /var/www/html/WordPress/license.txt: Permission denied
+ls: cannot access /var/www/html/WordPress/wp-cron.php: Permission denied
+ls: cannot access /var/www/html/WordPress/scripts: Permission denied
+total 0
+-????????? ? ? ? ?            ? appspec.yml
+-????????? ? ? ? ?            ? index.php
+-????????? ? ? ? ?            ? license.txt
+-????????? ? ? ? ?            ? readme.html
+d????????? ? ? ? ?            ? scripts
+-????????? ? ? ? ?            ? wp-activate.php
+d????????? ? ? ? ?            ? wp-admin
+-????????? ? ? ? ?            ? wp-blog-header.php
+-????????? ? ? ? ?            ? wp-comments-post.php
+-????????? ? ? ? ?            ? wp-config-sample.php
+d????????? ? ? ? ?            ? wp-content
+-????????? ? ? ? ?            ? wp-cron.php
+d????????? ? ? ? ?            ? wp-includes
+-????????? ? ? ? ?            ? wp-links-opml.php
+-????????? ? ? ? ?            ? wp-load.php
+-????????? ? ? ? ?            ? wp-login.php
+-????????? ? ? ? ?            ? wp-mail.php
+-????????? ? ? ? ?            ? wp-settings.php
+-????????? ? ? ? ?            ? wp-signup.php
+-????????? ? ? ? ?            ? wp-trackback.php
+-????????? ? ? ? ?            ? xmlrpc.php
+
+
+#Redeployment after modify the site
+
+cd /tmp/WordPress
+
+sed -i 's/#000/#768331/g' wp-content/themes/twentyfourteen/style.css
+ change files
+
+[ec2-user@ip-10-0-0-98 WordPress]$ aws deploy push   --application-name WordPress_App   --s3-location s3://ga-codedeploybucket/WordPressApp.zip   --ignore-hidden-files
+To deploy with this revision, run:
+aws deploy create-deployment --application-name WordPress_App --s3-location bucket=ga-codedeploybucket,key=WordPressApp.zip,bundleType=zip,eTag="8785264b70d24885a93959b625ea17eb-4" --deployment-group-name <deployment-group-name> --deployment-config-name <deployment-config-name> --description <description>
+[ec2-user@ip-10-0-0-98 WordPress]$  aws deploy create-deployment   --application-name WordPress_App   --deployment-config-name CodeDeployDefault.OneAtATime   --deployment-group-name WordPress_App_DeployGrp   --s3-location bucket=ga-codedeploybucket,bundleType=zip,key=WordPressApp.zip
+---------------------------------
+|       CreateDeployment        |
++---------------+---------------+
+|  deploymentId |  d-FIUN0RCL8  |
++---------------+---------------+
+
+ aws deploy create-deployment   --application-name WordPress_App   --deployment-config-name CodeDeployDefault.OneAtATime   --deployment-group-name WordPress_App_DeployGrp   --s3-location bucket=ga-codedeploybucket,bundleType=zip,key=WordPressApp.zip
+
+
+ aws deploy list-deployments --application-name WordPress_App --deployment-group-name WordPress_App_DeployGrp --query 'deployments' --output text
+ aws deploy get-deployment --deployment-id d-8AH2VUCL8 --query 'deploymentInfo.status' --output text
+
+To clean up
+
+http://docs.aws.amazon.com/codedeploy/latest/userguide/getting-started-clean-up.html

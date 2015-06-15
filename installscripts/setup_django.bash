@@ -8,16 +8,11 @@
 # Usage: Redhat-CentOS
 # edit the first few lines according to your VM IP then run it as a non-root user, who has sudo privilege
 #
-# Todo: Adop to other OS/apps.
-# Todo: Puppert/Ansible/Docker
-# Todo: can be further modulized and refactored
+# Todo: Deploy a real Apps into a new AWS ec2 instance at creation
+# Todo: translate into Puppert/Ansible/Docker
+# Todo: further modulized and refactored
 ###############################################################################
-#Step-0 Create a properly configured AWS Linux
-#Step-1:From AWS Linux VM initial creation, to install everything necessary to run a django project
-
-
 ###############################################################################
-# assume git has been installed so that this script can be pulled from github
 
 # User Variables (edit these)
 FqdnameOrIpAddress='hostname.compute.amazonaws.com'  #please edit this according to your VM fqdn or IP

@@ -20,7 +20,7 @@
 # assume git has been installed so that this script can be pulled from github
 
 # User Variables (edit these)
-FqdnameOrIpAddress='ec2-52-64-95-85.ap-southeast-2.compute.amazonaws.com'  #please edit this according to your VM's IP
+FqdnameOrIpAddress='hostname.compute.amazonaws.com'  #please edit this according to your VM fqdn or IP
 
 PROJECTS_DIR=/opt/django2  #where the djangos projects will be created
 
@@ -33,7 +33,7 @@ POSTGRES_DB_NAME='demodb2' # name of the database that your django project will 
 ##--------------------------------------------------------------------------------
 # BEGIN SCRIPT
 
-WHOAMI=`whoami`  # unix user: fzhang
+WHOAMI=`whoami`  # unix user: 
 
 sudo mkdir -p $PROJECTS_DIR
 
@@ -151,10 +151,10 @@ workers = 1
     # to run the gunicorn (as nobody user) sudo gunicorn
     gunicorn -c $DJANGO_PROJECT_NAME/gunicorn_config.py $DJANGO_PROJECT_NAME.wsgi &
 
-   echo "Testing at:  http://$FqdnameOrIpAddress/admin "
+   echo "Testing at:  http://$FqdnameOrIpAddress:8001/admin "
 }
 
-setup_nginx() {
+setup_nginx() { # worked for Ubut 
 
     #Install NGINX
     myprint "Install NGINX"
@@ -194,7 +194,7 @@ setup_nginx() {
 }
 
 setup_modwsgi(){
-
+# This will bundle apache/httpd with mod-wsgi to have a full functional website.
 MOD_WSIG_USER=$WHOAMI
 
 #libs required by modwsgi

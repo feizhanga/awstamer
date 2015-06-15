@@ -10,7 +10,7 @@
 # Usage: edit the first few lines according to your VM IP then run it as a non-root user, who has sudo privilege
 # Tests: ubuntu 14.04
 #
-# Todo:
+# Todo: Refactor and Integration
 ###############################################################################
 # User Variables (edit these)
 FqdnameOrIpAddress=128.199.190.92  #please edit this according to your VM's IP

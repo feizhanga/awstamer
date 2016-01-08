@@ -216,11 +216,11 @@ pip install mod-wsgi
     cd  $PROJECTS_DIR/$DJANGO_PROJECT_NAME
     python manage.py collectstatic
   
-    python manage.py runmodwsgi --setup-only --port=8888 --user ec2-user --group ec2-user --server-root=mod_wsgi-express-8888
+    python manage.py runmodwsgi --setup-only --port=8888 --user $MOD_WSIG_USER --group $MOD_WSIG_USER --server-root=mod_wsgi-express-8888
     mod_wsgi-express-8888/apachectl start
 
 
-    # not work sudo  $PROJECTS_DIR/ViPyEnv/bin/python manage.py runmodwsgi --setup-only --port=8888 --user $MOD_WSIG_USER --group root --server-root=/etc/mod-wsgi-express8888
+    # not work sudo  $PROJECTS_DIR/ViPyEnv/bin/python manage.py runmodwsgi --setup-only --port=8888 --user $MOD_WSIG_USER --group $MOD_WSIG_USER --server-root=/etc/mod-wsgi-express8888
 
     sudo  /etc/mod-wsgi-express8888/apachectl start
 
